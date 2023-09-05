@@ -2,6 +2,11 @@
 Generate chord progressions by randomizing sets of chords and enable users to playback the chord progression using their preferred MIDI instruments.
 
 
+
+[![Watch the video](https://img.youtube.com/vi/3yXnuPFXqrU/hqdefault.
+jpg)]
+(https://youtu.be/3yXnuPFXqrU)
+
 ## Installation
 
 Before running the Chord Generator App, you need to install its dependencies:
