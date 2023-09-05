@@ -3,9 +3,7 @@ Generate chord progressions by randomizing sets of chords and enable users to pl
 
 
 
-[![Watch the video](https://img.youtube.com/vi/3yXnuPFXqrU/hqdefault.
-jpg)]
-(https://youtu.be/3yXnuPFXqrU)
+[![Watch the video](https://img.youtube.com/vi/3yXnuPFXqrU/hqdefault.jpg)](https://youtu.be/3yXnuPFXqrU)
 
 ## Installation
 
