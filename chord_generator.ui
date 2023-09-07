@@ -6,9 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1124</width>
-    <height>728</height>
+    <width>1179</width>
+    <height>737</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+    <weight>50</weight>
+    <bold>false</bold>
+   </font>
   </property>
   <property name="windowTitle">
    <string>Chord Generator</string>
@@ -106,7 +113,7 @@
        <item>
         <widget class="QPushButton" name="generate_btn">
          <property name="text">
-          <string>Generate Chords</string>
+          <string>Generate Progression</string>
          </property>
         </widget>
        </item>
@@ -189,6 +196,23 @@
            <item>
             <widget class="QSpinBox" name="tempo_selector"/>
            </item>
+           <item>
+            <widget class="QLabel" name="label_8">
+             <property name="text">
+              <string>Chose Midi Device</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="midi_device_selector"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="refresh_midi_btn">
+             <property name="text">
+              <string>Refresh Devices List</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item>
@@ -196,45 +220,64 @@
            <item>
             <widget class="QLabel" name="repetition_label">
              <property name="text">
-              <string>Repetitions per Bar:</string>
+              <string>Select Timer Mode:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="timer_mode_selector"/>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_12">
+             <property name="text">
+              <string>Repetition Amount:</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QComboBox" name="repetition_selector"/>
            </item>
+           <item>
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <item>
-          <widget class="QLabel" name="label_8">
-           <property name="text">
-            <string>Chose Midi Instrument/Port</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="refresh_midi_btn">
-           <property name="text">
-            <string>Refresh Devices List</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <layout class="QHBoxLayout" name="horizontalLayout_4"/>
        </item>
        <item>
-        <widget class="QComboBox" name="midi_device_selector"/>
+        <widget class="QLabel" name="label_11">
+         <property name="text">
+          <string>Progression:</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QGraphicsView" name="view">
          <property name="minimumSize">
           <size>
            <width>700</width>
-           <height>0</height>
+           <height>100</height>
           </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
          </property>
          <property name="backgroundBrush">
           <brush brushstyle="NoBrush">
@@ -246,6 +289,59 @@
           </brush>
          </property>
         </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>Notes :</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTextEdit" name="notes_textedit">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="html">
+          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:14pt; font-weight:600; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Write whatever you want Here !&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;these notes will be saved along with your progression. &lt;br /&gt;&lt;br /&gt;Example of useful notes :&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Date:&lt;br /&gt;Tempo :&lt;br /&gt;Timer Mode:&lt;br /&gt;Repetition Amount:&lt;br /&gt;Instrument Used:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Instrument Settings:&lt;br /&gt;Lyrics :&lt;br /&gt;Author:&lt;br /&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QPushButton" name="save_btn">
+           <property name="text">
+            <string>Save</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="open_btn">
+           <property name="text">
+            <string>Open</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="open_editor_btn">
+           <property name="text">
+            <string>Open Progression Editor</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>

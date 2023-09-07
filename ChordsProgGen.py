@@ -1,5 +1,5 @@
 import sys
-from PySide6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QComboBox, QPushButton,
+from PySide6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QComboBox, QPushButton,QFileDialog,
                                QGraphicsView, QSpinBox, QGraphicsScene, QGraphicsRectItem, QGraphicsTextItem, QLineEdit, QLabel)
 from PySide6.QtCore import Qt, QTimer, QFile
 from PySide6.QtUiTools import QUiLoader
@@ -7,7 +7,8 @@ import random
 import mido
 from time import sleep
 import data
-
+import json
+import os
 
 class ChordGenerator(QWidget):
     def __init__(self):
@@ -19,12 +20,14 @@ class ChordGenerator(QWidget):
         file.open(QFile.ReadOnly)
         self.ui = loader.load(file, self)
         file.close()
+
         # Initialize the timer and connect its timeout signal
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.play_next_step)
 
         self.port = None
 
+        self.notes_textedit = self.ui.notes_textedit
         
         # Additional attributes to help manage the play state
         self.current_chord_index = 0
@@ -35,7 +38,7 @@ class ChordGenerator(QWidget):
         self.bar_selector = self.ui.bar_selector
         self.bar_selector.addItems(['2', '3', '4', '6', '8', '12'])
         self.tempo_selector = self.ui.tempo_selector
-        self.tempo_selector.setRange(30, 240)  # Adjust the range if needed
+        self.tempo_selector.setRange(10, 480)  # Adjust the range if needed
         self.tempo_selector.setValue(120)  # Default to 120 BPM
         self.tempo_selector.setSuffix(" BPM")
 
@@ -54,12 +57,24 @@ class ChordGenerator(QWidget):
         self.chord_input_label = self.ui.chord_input_label
         self.chord_input_field = self.ui.chord_input_field
 
+        # Timer Mode Selector (added)
+        self.timer_mode_selector = self.ui.timer_mode_selector
+        self.timer_mode_selector.addItems(["Repetitions", "Subdivisions"])
+        self.timer_mode_selector.setCurrentIndex(0)  # Default to "Repetition"
 
 
         # Generate button
         self.generate_btn = self.ui.generate_btn
         self.generate_btn.clicked.connect(self.generate_chords)
- 
+
+        # Save button (added)
+        self.save_btn = self.ui.save_btn
+        self.save_btn.clicked.connect(self.save_chord_progression)
+
+        # Open button (added)
+        self.open_btn = self.ui.open_btn
+        self.open_btn.clicked.connect(self.open_chord_progression)
+
 
         # Play button
         self.play_btn = self.ui.play_btn
@@ -76,7 +91,7 @@ class ChordGenerator(QWidget):
         self.view.setScene(self.scene)
         # Repetition selector
         self.repetition_selector = self.ui.repetition_selector
-        self.repetition_selector.addItems(['2', '3', '4', '5', '6', '7', '8'])
+        self.repetition_selector.addItems(['1','2', '3', '4', '5', '6', '7', '8', '9','12','16','18'])
 
         self.refresh_midi_btn = self.ui.refresh_midi_btn
         self.refresh_midi_btn.clicked.connect(self.update_midi_devices)
@@ -91,7 +106,9 @@ class ChordGenerator(QWidget):
         self.update_midi_devices()
         self.midi_device_selector.currentIndexChanged.connect(self.set_midi_device)
         self.set_midi_device()
-    
+        self.open_editor_btn = self.ui.open_editor_btn
+        self.open_editor_btn.clicked.connect(self.open_chord_editor)
+
 
     def generate_chords(self):
         self.scene.clear()  # Clear previous bars
@@ -121,14 +138,25 @@ class ChordGenerator(QWidget):
 
             chord_text = QGraphicsTextItem(chord)
             chord_text.setPos(i * (bar_width + spacing) + 10, 10)
+
+            # Set the font size for the chord text
+            font = chord_text.font()
+            font.setPointSize(12)  # Adjust the font size as needed
+            chord_text.setFont(font)                
+
             self.scene.addItem(chord_text)
     def play_chords(self):
         self.beat_duration = 60 / self.tempo_selector.value()
         self.current_chord_index = 0
         self.current_step = 0
         repetitions = int(self.repetition_selector.currentText())
+        subdivision_mode = self.timer_mode_selector.currentText()  # Get the selected mode
+
         self.total_steps = repetitions * 2  # times 2 because each chord is played and then stopped
-        self.timer.start(self.beat_duration * 1000)  # Adjust the beat duration directly
+        if subdivision_mode == "Repetitions":
+            self.timer.start(self.beat_duration * 1000)  # Adjust the beat duration directly
+        elif subdivision_mode == "Subdivisions":
+            self.timer.start(self.beat_duration / repetitions * 1000)  # Adjust the beat duration
 
     def play_next_step(self):
         if self.current_chord_index < len(self.generated_chords):
@@ -190,7 +218,71 @@ class ChordGenerator(QWidget):
             self.port = None
             # Optionally show an error message to the user.
             print(f"Selected MIDI device '{selected_device}' is not available.")
+    def save_chord_progression(self):
+        options = QFileDialog.Options()
+        filter = "Chord Progression Files (*.chordprog);;All Files (*)"
+        file_path, _ = QFileDialog.getSaveFileName(self, "Save Chord Progression", "", filter, options=options)
 
+        if file_path:
+            if not file_path.endswith(".chordprog"):
+                file_path += ".chordprog"
+
+            with open(file_path, 'w') as file:
+                data_to_save = {
+                    "tonality": self.tonality_selector.currentText(),
+                    "chords": self.generated_chords,
+                    "notes": self.notes_textedit.toPlainText(),  # Save notes text
+                }
+                json.dump(data_to_save, file)
+                QMessageBox.information(self, "Saved", "Chord progression saved successfully!")
+
+    def open_chord_progression(self):
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open Chord Progression", "", "Chord Progression Files (*.chordprog);;All Files (*)", options=options)
+
+        if file_path:
+            with open(file_path, 'r') as file:
+                data = json.load(file)
+                tonality = data.get("tonality")
+                chords = data.get("chords")
+                notes = data.get("notes")  # Load notes text
+
+                if tonality and chords:
+                    self.tonality_selector.setCurrentText(tonality)
+                    self.generated_chords = chords
+                    self.show_chords_on_ui()
+                    if notes is not None:
+                        self.notes_textedit.setPlainText(notes)  # Populate notes text
+                    else:
+                        self.notes_textedit.setPlainText("")  # Clear notes text
+                    QMessageBox.information(self, "Opened", "Chord progression opened successfully.")
+
+
+    # Add a method to display the loaded chords on the UI
+    def show_chords_on_ui(self):
+        self.scene.clear()  # Clear previous bars
+        self.bar_rectangles = []  # List to store the rectangles for each chord
+
+        num_bars = len(self.generated_chords)  # Use the number of loaded chords
+        bar_width = 80
+        bar_height = 40
+        spacing = 10
+
+        for i in range(num_bars):
+            chord = self.generated_chords[i]
+
+            # Create rectangle representing a bar/chord
+            bar = QGraphicsRectItem(i * (bar_width + spacing), 0, bar_width, bar_height)
+            self.scene.addItem(bar)
+            bar.setBrush(Qt.gray)  # Default color
+            self.bar_rectangles.append(bar)
+
+            chord_text = QGraphicsTextItem(chord)
+            chord_text.setPos(i * (bar_width + spacing) + 10, 10)
+            self.scene.addItem(chord_text)
+    def open_chord_editor(self):
+        
+        os.system("python chordsProgEditor.py")
     
 
 if __name__ == "__main__":
