@@ -21,7 +21,7 @@ Before running the Chord Generator App, you need to install its dependencies:
 3. **Mido:** Install the Mido library for MIDI communication:
 
     ```
-    pip install mido
+    pip install mido python-rtmidi
     ```
 
 ## Usage
