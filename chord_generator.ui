@@ -25,14 +25,14 @@
     <widget class="QLabel" name="label_4">
      <property name="font">
       <font>
-       <family>Noto Sans Black</family>
+       <family>Petaluma Script</family>
        <pointsize>22</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="text">
-      <string> Uldarik's Chord Progression Generator</string>
+      <string> Chord Progression Generator</string>
      </property>
     </widget>
    </item>
@@ -338,6 +338,13 @@ p, li { white-space: pre-wrap; }
           <widget class="QPushButton" name="open_editor_btn">
            <property name="text">
             <string>Open Progression Editor</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="openSyncopatorBtn">
+           <property name="text">
+            <string>Open Syncopator</string>
            </property>
           </widget>
          </item>

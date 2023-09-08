@@ -108,7 +108,8 @@ class ChordGenerator(QWidget):
         self.set_midi_device()
         self.open_editor_btn = self.ui.open_editor_btn
         self.open_editor_btn.clicked.connect(self.open_chord_editor)
-
+        self.openSyncopatorBtn = self.ui.openSyncopatorBtn
+        self.openSyncopatorBtn.clicked.connect(self.open_syncopator)
 
     def generate_chords(self):
         self.scene.clear()  # Clear previous bars
@@ -281,9 +282,12 @@ class ChordGenerator(QWidget):
             chord_text.setPos(i * (bar_width + spacing) + 10, 10)
             self.scene.addItem(chord_text)
     def open_chord_editor(self):
-        
+        self.stop_chords()
         os.system("python chordsProgEditor.py")
-    
+    def open_syncopator(self):
+        self.stop_chords()
+        os.system("python chordprogplayer.py")
+        
 
 if __name__ == "__main__":
     app = QApplication([])
