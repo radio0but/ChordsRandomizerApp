@@ -42,7 +42,7 @@ Before running the Chord Generator App, you need to install its dependencies:
 3. Run the Chord Generator App:
 
     ```
-    python chord_generator.py
+    python ChordsProgGen.py
     ```
 
 
