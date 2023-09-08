@@ -6,6 +6,8 @@ In this examble i use Yoshimi Synth as MIDI instrument
 
 [![Watch the video](https://img.youtube.com/vi/3yXnuPFXqrU/hqdefault.jpg)](https://youtu.be/3yXnuPFXqrU)
 
+![](Screenshot_.png)
+
 ## Installation
 
 Before running the Chord Generator App, you need to install its dependencies:
